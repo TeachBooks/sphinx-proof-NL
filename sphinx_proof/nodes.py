@@ -32,16 +32,38 @@ def visit_enumerable_node(self, node: Node) -> None:
 
 def depart_enumerable_node(self, node: Node) -> None:
     typ = node.attributes.get("type", "")
+
+    # Hardcode Dutch translations for type
+    TRANSLATIONS = {
+        "axiom": "Axioma",
+        "theorem": "Stelling",
+        "lemma": "Lemma",
+        "algorithm": "Algoritme",
+        "definition": "Definitie",
+        "remark": "Opmerking",
+        "conjecture": "Veronderstelling",
+        "corollary": "Gevolgtrekking",
+        "criterion": "Criterium",
+        "example": "Voorbeeld",
+        "property": "Eigenschap",
+        "observation": "Observatie",
+        "proposition": "Propositie",
+        "assumption": "Aanname",
+        "proof": "Bewijs",
+    }
+
+    dutch_typ = TRANSLATIONS.get(typ, typ.title())
+
     if isinstance(self, LaTeXTranslator):
         number = get_node_number(self, node, typ)
         idx = list_rindex(self.body, latex_admonition_start) + 2
-        self.body.insert(idx, f"{typ.title()} {number}")
+        self.body.insert(idx, f"{dutch_typ} {number}")
         self.body.append(latex_admonition_end)
     else:
-        # Find index in list of 'Proof #'
+        # Find the index for inserting the translated type and number
         number = get_node_number(self, node, typ)
         idx = self.body.index(f"{typ} {number} ")
-        self.body[idx] = f"{_(typ.title())} {number} "
+        self.body[idx] = f"{dutch_typ} {number} "
         self.body.append("</div>")
 
 
@@ -57,16 +79,38 @@ def visit_unenumerable_node(self, node: Node) -> None:
 def depart_unenumerable_node(self, node: Node) -> None:
     typ = node.attributes.get("type", "")
     title = node.attributes.get("title", "")
+
+    # Hardcode Dutch translations for type
+    TRANSLATIONS = {
+        "axiom": "Axioma",
+        "theorem": "Stelling",
+        "lemma": "Lemma",
+        "algorithm": "Algoritme",
+        "definition": "Definitie",
+        "remark": "Opmerking",
+        "conjecture": "Veronderstelling",
+        "corollary": "Gevolgtrekking",
+        "criterion": "Criterium",
+        "example": "Voorbeeld",
+        "property": "Eigenschap",
+        "observation": "Observatie",
+        "proposition": "Propositie",
+        "assumption": "Aanname",
+        "proof": "Bewijs",
+    }
+
+    dutch_typ = TRANSLATIONS.get(typ, typ.title())
+
     if isinstance(self, LaTeXTranslator):
         idx = list_rindex(self.body, latex_admonition_start) + 2
-        self.body.insert(idx, f"{typ.title()}")
+        self.body.insert(idx, f"{dutch_typ}")
         self.body.append(latex_admonition_end)
     else:
         if title == "":
             idx = list_rindex(self.body, '<p class="admonition-title">') + 1
         else:
             idx = list_rindex(self.body, title)
-        element = f"<span>{_(typ.title())} </span>"
+        element = f"<span>{dutch_typ} </span>"
         self.body.insert(idx, element)
         self.body.append("</div>")
 
